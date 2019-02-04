@@ -1,0 +1,24 @@
+{
+  "name": "job-search-node",
+  "version": "1.0.0",
+  "description": "job-search-backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/etg624/job-search-server.git"
+  },
+  "author": "Evan Guirino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/etg624/job-search-server/issues"
+  },
+  "homepage": "https://github.com/etg624/job-search-server#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.9",
+    "morgan": "^1.9.1"
+  }
+}
