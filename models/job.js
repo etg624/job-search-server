@@ -8,6 +8,8 @@ const job = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
+job.set('timestamps', true);
+
 job.set('toJSON', {
   virtuals: true,
   transform: (doc, result) => {

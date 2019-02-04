@@ -14,12 +14,22 @@ const user = new mongoose.Schema({
   lastName: { type: String, default: '' }
 });
 
-user.methods.serialize = function() {
-  return {
-    username: this.username,
-    firstName: this.firstName,
-    lastName: this.lastName
-  };
-};
+user.set('timestamps', true);
+
+// user.methods.serialize = function() {
+//   return {
+//     username: this.username,
+//     firstName: this.firstName,
+//     lastName: this.lastName
+//   };
+// };
+
+user.set('toJSON', {
+  virtuals: true,
+  transform: (doc, result) => {
+    delete result._id;
+    delete result.__v;
+  }
+});
 
 module.exports = mongoose.model('User', user);
