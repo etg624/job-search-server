@@ -40,10 +40,18 @@ app.use('/api/jobs', jobsRouter);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 
-// const jwtAuth = passport.authenticate('jwt', { session: false });
+const jwtAuth = passport.authenticate('jwt', { session: false });
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
 
 app.use((req, res, next) => {
   const err = new Error('404 Not Found');
+  if (process.env.NODE_ENV === 'development') {
+    console.log(err);
+  }
   err.status = 404;
   next(err);
 });
@@ -96,5 +104,5 @@ function closeServer() {
 }
 
 if (require.main === module) {
-  runServer(DATABASE_URL).catch(err => console.err(err));
+  runServer(DATABASE_URL).catch(err => console.log(err));
 }

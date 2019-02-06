@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { DATABASE_URL } = require('../config');
 const Job = require('../models/job');
 const Comment = require('../models/comment');
-const User = require('../models/user');
+const { User } = require('../models/user');
 
 const { jobs, comments, users } = require('../fake-data/fakeData');
 
@@ -32,6 +32,6 @@ mongoose
     return mongoose.disconnect();
   })
   .catch(err => {
-    console.err(err);
+    console.log(err);
     return mongoose.disconnect();
   });
