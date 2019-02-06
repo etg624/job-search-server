@@ -19,14 +19,6 @@ const user = new mongoose.Schema({
 
 user.set('timestamps', true);
 
-// user.methods.serialize = function() {
-//   return {
-//     username: this.username,
-//     firstName: this.firstName,
-//     lastName: this.lastName
-//   };
-// };
-
 user.set('toJSON', {
   virtuals: true,
   transform: (doc, result) => {

@@ -4,7 +4,7 @@ const job = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   location: { type: String },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+  comments: [{ type: String }],
   pay: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });

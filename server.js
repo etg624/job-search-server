@@ -57,13 +57,15 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  console.log(err);
   if (err.status) {
     const errBody = Object.assign({}, err, { message: err.message });
     res.status(err.status).json(errBody);
   } else {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(err);
-    }
+    // if (process.env.NODE_ENV !== 'production') {
+    //
+    // }
+
     res.status(500).json({ message: 'Internal Sever Error' });
   }
 });

@@ -1,12 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const passport = require('passport');
 const Job = require('../models/job');
 const router = express.Router();
 
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false, failWithError: true })
+);
+
 router.get('/', (req, res, next) => {
-  console.log('FROM the backend');
-  Job.find()
+  console.log(req.user);
+  Job.find({ userId: req.user.id })
 
     .then(results => res.json(results))
     .catch(err => {
@@ -36,8 +41,8 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const { title, description, location, comments, pay } = req.body;
-  // const userId = req.user.id;
-  const newJob = { title, description, location, comments, pay };
+  const userId = req.user.id;
+  const newJob = { title, description, location, comments, pay, userId };
 
   if (!title) {
     const err = new Error('missing title');
@@ -46,13 +51,18 @@ router.post('/', (req, res, next) => {
   }
 
   Job.create(newJob)
+    // .populate('comments')
     .then(result => {
+      console.log('hello from the backend');
       res
         .location(`${req.originalUrl}/${result.id}`)
         .status(201)
         .json(result);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      console.log(err);
+      return next(err);
+    });
 });
 
 router.delete('/:id', (req, res, next) => {
