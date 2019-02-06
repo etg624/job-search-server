@@ -2,7 +2,12 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const jobsRouter = require('./routes/jobs');
+const cors = require('cors');
+require('dotenv').config();
+const passport = require('passport');
 
+const { router: usersRouter } = require('./users/router');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 const { PORT, DATABASE_URL } = require('./config');
 const app = express();
 
@@ -10,9 +15,22 @@ mongoose.Promise = global.Promise;
 
 app.use(morgan('common'));
 
+app.use(
+  cors({
+    origin: 'http://localhost:3000'
+  })
+);
+
 app.use(express.json());
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 app.use('/api/jobs', jobsRouter);
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+// const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.use((req, res, next) => {
   const err = new Error('404 Not Found');

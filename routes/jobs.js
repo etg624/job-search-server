@@ -5,7 +5,9 @@ const Job = require('../models/job');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
+  console.log('FROM the backend');
   Job.find()
+
     .then(results => res.json(results))
     .catch(err => {
       next(err);
@@ -33,9 +35,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { title, description, location, comments } = req.body;
+  const { title, description, location, comments, pay } = req.body;
   // const userId = req.user.id;
-  const newJob = { title, description, location, comments };
+  const newJob = { title, description, location, comments, pay };
 
   if (!title) {
     const err = new Error('missing title');

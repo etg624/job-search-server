@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+mongoose.Promise = global.Promise;
 
 const user = new mongoose.Schema({
   username: {
@@ -32,4 +35,14 @@ user.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('User', user);
+user.methods.validatePassword = function(password) {
+  return bcrypt.compare(password, this.password);
+};
+
+user.statics.hashPassword = function(password) {
+  return bcrypt.hash(password, 10);
+};
+
+const User = mongoose.model('User', user);
+
+module.exports = { User };
