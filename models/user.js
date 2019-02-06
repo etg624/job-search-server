@@ -32,8 +32,18 @@ user.set('toJSON', {
   transform: (doc, result) => {
     delete result._id;
     delete result.__v;
+    delete result.password;
   }
 });
+
+// user.set('toObject', {
+//   virtuals: true,
+//   transform: (doc, result) => {
+//     delete result._id;
+//     delete result.__v;
+//     delete result.password;
+//   }
+// });
 
 user.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password);
