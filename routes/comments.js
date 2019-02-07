@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const Job = require('../models/job');
+const Comment = require('../models/comment');
 const router = express.Router();
+const Job = require('../models/job');
 
 router.use(
   '/',
@@ -11,8 +12,8 @@ router.use(
 
 router.get('/', (req, res, next) => {
   console.log(req.user);
-  Job.find({ userId: req.user.id })
-    .populate('comments')
+  Comment.find({ userId: req.user.id })
+
     .then(results => res.json(results))
     .catch(err => {
       next(err);
@@ -29,8 +30,7 @@ router.get('/:id', (req, res, next) => {
     return next(err);
   }
 
-  Job.findOne({ _id: id, userId })
-    .populate('comments')
+  Comment.findOne({ _id: id, userId })
     .then(result => {
       if (result) {
         res.json(result);
@@ -42,44 +42,56 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { title, description, location, comments, pay } = req.body;
+  const { content } = req.body.comment;
+  const { jobId } = req.body;
+  console.log('CONTENT', content);
+  console.log('JOBID', jobId);
   const userId = req.user.id;
-  const newJob = { title, description, location, comments, pay, userId };
-
-  if (!title) {
-    const err = new Error('missing title');
+  const newComment = { content, userId };
+  if (!content) {
+    const err = new Error('missing content');
     err.status = 400;
     return next(err);
   }
+  let job;
+  Job.findOne({ _id: jobId, userId })
+    .populate('comments')
 
-  Job.create(newJob)
     .then(result => {
-      res
-        .location(`${req.originalUrl}/${result.id}`)
-        .status(201)
-        .json(result);
+      job = result;
     })
-    .catch(err => {
-      console.log(err);
-      return next(err);
-    });
+    .then(() => Comment.create(newComment))
+    .then(comment => {
+      console.log(comment);
+      job.comments.push(comment._id);
+      return job.save();
+    })
+    .then(result => res.json(result))
+    .catch(err => next(err));
+
+  // Comment.create(newComment)
+  //   // .populate('comments')
+  //   .then(result => {
+  //     res
+  //       .location(`${req.originalUrl}/${result.id}`)
+  //       .status(201)
+  //       .json(result);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     return next(err);
+  //   });
 });
 
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
 
-  const updateJob = {};
-  const updateJobFields = [
-    'title',
-    'description',
-    'location',
-    'comments',
-    'pay'
-  ];
+  const updateComment = {};
+  const updateJobFields = ['content'];
   updateJobFields.forEach(field => {
     if (field in req.body) {
-      updateJob[field] = req.body[field];
+      updateComment[field] = req.body[field];
     }
   });
 
@@ -94,16 +106,18 @@ router.put('/:id', (req, res, next) => {
   //   err.status = 400;
   //   return next(err);
   // }
-  console.log('UPDATE JOB', updateJob);
-  Job.findOneAndUpdate({ _id: id, userId }, updateJob, { new: true })
+  console.log('UPDATE JOB', updateComment);
+  Comment.findOneAndUpdate({ _id: id, userId }, updateComment, { new: true })
     .then(result => {
       if (result) {
+        console.log(result);
         res.json(result);
       } else {
         next();
       }
     })
     .catch(err => {
+      console.log(err);
       next(err);
     });
 });
@@ -112,7 +126,7 @@ router.delete('/:id', (req, res, next) => {
   const userId = req.user.id;
   const { id } = req.params;
 
-  Job.findOneAndRemove({ _id: id, userId })
+  Comment.findOneAndRemove({ _id: id, userId })
     .then(() => res.sendStatus(204))
     .catch(err => next(err));
 });

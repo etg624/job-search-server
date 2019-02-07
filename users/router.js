@@ -120,7 +120,7 @@ router.post('/', jsonParser, (req, res) => {
       });
     })
     .then(user => {
-      return res.status(201).json(user.serialize());
+      return res.status(201).json(user);
     })
     .catch(err => {
       // Forward validation errors on to the client, otherwise give a 500
@@ -138,7 +138,7 @@ router.post('/', jsonParser, (req, res) => {
 // verify this in the Mongo shell.
 router.get('/', (req, res) => {
   return User.find()
-    .then(users => res.json(users.map(user => user.serialize())))
+    .then(users => res.json(users.map(user => user)))
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 
