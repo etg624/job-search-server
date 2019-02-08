@@ -54,6 +54,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
   let job;
+  let responseComment;
   Job.findOne({ _id: jobId, userId })
     .populate('comments')
 
@@ -61,12 +62,14 @@ router.post('/', (req, res, next) => {
       job = result;
     })
     .then(() => Comment.create(newComment))
+    .then(Job.findOne({ _id: jobId, userId }).populate('comments'))
     .then(comment => {
-      console.log(comment);
+      responseComment = comment;
+      console.log('LINE 66', comment);
       job.comments.push(comment._id);
       return job.save();
     })
-    .then(result => res.json(result))
+    .then(() => res.json(responseComment))
     .catch(err => next(err));
 
   // Comment.create(newComment)
