@@ -44,8 +44,6 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const { content } = req.body.comment;
   const { jobId } = req.body;
-  console.log('CONTENT', content);
-  console.log('JOBID', jobId);
   const userId = req.user.id;
   const newComment = { content, userId };
   if (!content) {
@@ -65,7 +63,6 @@ router.post('/', (req, res, next) => {
     .then(Job.findOne({ _id: jobId, userId }).populate('comments'))
     .then(comment => {
       responseComment = comment;
-      console.log('LINE 66', comment);
       job.comments.push(comment._id);
       return job.save();
     })
