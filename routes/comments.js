@@ -106,11 +106,10 @@ router.put('/:id', (req, res, next) => {
   //   err.status = 400;
   //   return next(err);
   // }
-  console.log('UPDATE JOB', updateComment);
+
   Comment.findOneAndUpdate({ _id: id, userId }, updateComment, { new: true })
     .then(result => {
       if (result) {
-        console.log(result);
         res.json(result);
       } else {
         next();

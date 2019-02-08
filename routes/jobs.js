@@ -10,7 +10,6 @@ router.use(
 );
 
 router.get('/', (req, res, next) => {
-  console.log(req.user);
   Job.find({ userId: req.user.id })
     .populate('comments')
     .then(results => res.json(results))
@@ -94,7 +93,6 @@ router.put('/:id', (req, res, next) => {
   //   err.status = 400;
   //   return next(err);
   // }
-  console.log('UPDATE JOB', updateJob);
   Job.findOneAndUpdate({ _id: id, userId }, updateJob, { new: true })
     .then(result => {
       if (result) {
