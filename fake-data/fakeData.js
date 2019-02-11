@@ -97,4 +97,30 @@ const users = [
   }
 ];
 
-module.exports = { jobs, comments, users };
+const events = [
+  {
+    _id: '422222222222222222222203',
+    title: 'Call Bob',
+    start: new Date(),
+    end: new Date(),
+    userId: '333333333333333333333301'
+  },
+
+  {
+    _id: '422222222222222222222204',
+    title: 'Call Rick',
+    start: new Date(),
+    end: new Date(),
+    userId: '333333333333333333333301'
+  },
+
+  {
+    _id: '422222222222222222222205',
+    title: 'Call Susan',
+    start: new Date(),
+    end: new Date(),
+    userId: '333333333333333333333301'
+  }
+];
+
+module.exports = { jobs, comments, users, events };

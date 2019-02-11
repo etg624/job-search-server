@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const { DATABASE_URL } = require('../config');
 const Job = require('../models/job');
 const Comment = require('../models/comment');
+const Event = require('../models/event');
+
 const { User } = require('../models/user');
 
-const { jobs, comments, users } = require('../fake-data/fakeData');
+const { jobs, comments, users, events } = require('../fake-data/fakeData');
 
 console.log(`Connecting to mongodb ad ${DATABASE_URL}`);
 mongoose
@@ -15,7 +17,8 @@ mongoose
     return Promise.all([
       Job.deleteMany(),
       Comment.deleteMany(),
-      User.deleteMany()
+      User.deleteMany(),
+      Event.deleteMany()
     ]);
   })
   .then(() => {
@@ -23,7 +26,8 @@ mongoose
     return Promise.all([
       Job.insertMany(jobs),
       Comment.insertMany(comments),
-      User.insertMany(users)
+      User.insertMany(users),
+      Event.insertMany(events)
     ]);
   })
   .then(results => {

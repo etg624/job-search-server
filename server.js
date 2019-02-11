@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const jobsRouter = require('./routes/jobs');
 const commentsRouter = require('./routes/comments');
+const eventsRouter = require('./routes/events');
 const cors = require('cors');
 require('dotenv').config();
 const passport = require('passport');
@@ -39,6 +40,7 @@ passport.use(jwtStrategy);
 
 app.use('/api/jobs', jobsRouter);
 app.use('/api/comments', commentsRouter);
+app.use('/api/events', eventsRouter);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 
