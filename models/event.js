@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const event = new mongoose.Schema({
-  title: { type: String },
-  start: { type: Date },
-  end: { type: Date },
+  title: { type: String, required: true },
+  start: { type: Date, required: true },
+  end: { type: Date, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-event.index({ userId: 1, title: 1 }, { unique: true });
+// event.index({ userId: 1 }, { unique: true });
 event.set('timestamps', true);
 
 event.set('toJSON', {

@@ -12,6 +12,7 @@ router.use(
 router.get('/', (req, res, next) => {
   Job.find({ userId: req.user.id })
     .populate('comments')
+    .populate('events')
     .then(results => res.json(results))
     .catch(err => {
       next(err);
@@ -30,6 +31,7 @@ router.get('/:id', (req, res, next) => {
 
   Job.findOne({ _id: id, userId })
     .populate('comments')
+    .populate('events')
     .then(result => {
       if (result) {
         res.json(result);
@@ -41,9 +43,17 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { title, description, location, comments, pay } = req.body;
+  const { title, description, location, comments, pay, events } = req.body;
   const userId = req.user.id;
-  const newJob = { title, description, location, comments, pay, userId };
+  const newJob = {
+    title,
+    description,
+    location,
+    comments,
+    pay,
+    userId,
+    events
+  };
 
   if (!title) {
     const err = new Error('missing title');
@@ -74,7 +84,8 @@ router.put('/:id', (req, res, next) => {
     'description',
     'location',
     'comments',
-    'pay'
+    'pay',
+    'events'
   ];
   updateJobFields.forEach(field => {
     if (field in req.body) {

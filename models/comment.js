@@ -5,7 +5,7 @@ const comment = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-comment.index({ userId: 1, content: 1 }, { unique: true });
+// comment.index({ userId: 1, content: 1 }, { unique: true });
 comment.set('timestamps', true);
 
 comment.set('toJSON', {

@@ -20,32 +20,100 @@ router.get('/', (req, res, next) => {
       next(err);
     });
 });
+
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The id is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  Event.findOne({ _id: id, userId })
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return next(err);
+    });
+});
+
 router.post('/', (req, res, next) => {
-  console.log('BODY', req.body.events);
-  const { title } = req.body;
+  const { title, start, end } = req.body.event;
   const { jobId } = req.body;
   const userId = req.user.id;
-  const newEvent = { title, userId };
-  // if (!title) {
-  //   const err = new Error('missing title');
-  //   err.status = 400;
-  //   return next(err);
-  // }
+  const newEvent = { start, title, userId, end };
+  if (!title) {
+    const err = new Error('missing title');
+    err.status = 400;
+    return next(err);
+  }
   let job;
   let responseEvent;
+  console.log(jobId, userId);
   Job.findOne({ _id: jobId, userId })
     .populate('events')
-
     .then(result => {
+      console.log(result);
+
       job = result;
     })
     .then(() => Event.create(newEvent))
     .then(Job.findOne({ _id: jobId, userId }).populate('events'))
     .then(event => {
       responseEvent = event;
-      job.event.push(event.id);
+      job.events.push(event._id);
       return job.save();
     })
     .then(() => res.json(responseEvent))
+    .catch(err => {
+      console.log(err);
+      return next(err);
+    });
+});
+
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+  const updateEvent = {};
+
+  const updateableFields = ['title', 'start', 'end'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updateEvent[field] = req.body[field];
+    }
+  });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The id is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  Event.findOneAndUpdate({ _id: id, userId }, updateEvent, { new: true })
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
+});
+
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  const userId = req.user.id;
+
+  Event.findOneAndRemove({ _id: id, userId })
+    .then(() => res.sendStatus(204))
     .catch(err => next(err));
 });
