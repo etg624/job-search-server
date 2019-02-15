@@ -11,7 +11,6 @@ router.use(
 );
 
 router.get('/', (req, res, next) => {
-  console.log(req.user);
   Comment.find({ userId: req.user.id })
 
     .then(results => res.json(results))

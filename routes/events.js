@@ -57,12 +57,10 @@ router.post('/', (req, res, next) => {
   }
   let job;
   let responseEvent;
-  console.log(jobId, userId);
+
   Job.findOne({ _id: jobId, userId })
     .populate('events')
     .then(result => {
-      console.log(result);
-
       job = result;
     })
     .then(() => Event.create(newEvent))
