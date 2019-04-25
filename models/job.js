@@ -7,6 +7,8 @@ const job = new mongoose.Schema({
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
   pay: { type: String },
+  adLink: { type: String },
+  companyLink: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
