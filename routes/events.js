@@ -46,10 +46,10 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { title, start, end } = req.body.event;
+  const { title, start, end, color } = req.body.event;
   const { jobId } = req.body;
   const userId = req.user.id;
-  const newEvent = { start, title, userId, end };
+  const newEvent = { start, title, userId, end, color };
   if (!title) {
     const err = new Error('missing title');
     err.status = 400;

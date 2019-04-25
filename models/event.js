@@ -3,6 +3,7 @@ const event = new mongoose.Schema({
   title: { type: String, required: true },
   start: { type: Date, required: true },
   end: { type: Date, required: true },
+  color: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
