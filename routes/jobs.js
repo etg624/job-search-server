@@ -51,7 +51,8 @@ router.post('/', (req, res, next) => {
     pay,
     events,
     adLink,
-    companyLink
+    companyLink,
+    dateApplied
   } = req.body;
   const userId = req.user.id;
   const newJob = {
@@ -63,7 +64,8 @@ router.post('/', (req, res, next) => {
     userId,
     events,
     adLink,
-    companyLink
+    companyLink,
+    dateApplied
   };
 
   if (!title) {
@@ -98,7 +100,8 @@ router.put('/:id', (req, res, next) => {
     'pay',
     'events',
     'adLink',
-    'companyLink'
+    'companyLink',
+    'dateApplied'
   ];
   updateJobFields.forEach(field => {
     if (field in req.body) {

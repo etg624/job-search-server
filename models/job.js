@@ -9,6 +9,7 @@ const job = new mongoose.Schema({
   pay: { type: String },
   adLink: { type: String },
   companyLink: { type: String },
+  dateApplied: { type: Date },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
